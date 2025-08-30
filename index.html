@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>WDW Diabetes Guide • Type 1 & Type 2</title>
+  <meta name="description" content="Evidence-informed travel guide for guests with Type 1 and Type 2 diabetes at Walt Disney World. Includes park-by-park carb counts, tools, and packing checklist." />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root { --fg: #0f172a; --bg: #f8fafc; --card: #ffffff; --muted:#64748b; }
+    body { font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
+    .hc body, .hc { --fg:#ffffff; --bg:#000000; --card:#111111; --muted:#e5e7eb; }
+    .focus-ring:focus { outline: 3px solid #3b82f6; outline-offset: 2px; }
+    .badge { font-size: 0.75rem; padding: 0.15rem 0.5rem; border-radius: 9999px; }
+    .badge-veg { background: #ecfdf5; color:#065f46; }
+    .badge-fried { background: #fff7ed; color:#9a3412; }
+    .badge-drink { background: #eef2ff; color:#3730a3; }
+    .badge-lowcarb { background: #f0fdf4; color:#166534; }
+    .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+  </style>
+</head>
+<body class="bg-[var(--bg)] text-[var(--fg)] min-h-screen">
+  <a href="#main" class="sr-only focus:not-sr-only focus-ring">Skip to content</a>
+  <header class="sticky top-0 z-50 bg-[var(--card)]/90 backdrop-blur border-b">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex items-center gap-3">
+      <span class="text-xl font-bold">WDW Diabetes Guide</span>
+      <nav class="ml-auto hidden md:flex gap-2" aria-label="Primary">
+        <button class="nav-btn px-3 py-2 rounded-lg hover:bg-slate-100 focus-ring" data-target="home">Home</button>
+        <button class="nav-btn px-3 py-2 rounded-lg hover:bg-slate-100 focus-ring" data-target="t1">Type 1 Guide</button>
+        <button class="nav-btn px-3 py-2 rounded-lg hover:bg-slate-100 focus-ring" data-target="t2">Type 2 Guide</button>
+        <button class="nav-btn px-3 py-2 rounded-lg hover:bg-slate-100 focus-ring" data-target="food">Food Finder</button>
+        <button class="nav-btn px-3 py-2 rounded-lg hover:bg-slate-100 focus-ring" data-target="tools">Tools</button>
+        <button class="nav-btn px-3 py-2 rounded-lg hover:bg-slate-100 focus-ring" data-target="access">Accessibility & Support</button>
+      </nav>
+      <div class="ml-auto md:ml-2 flex items-center gap-2">
+        <button id="contrastToggle" class="px-3 py-2 rounded-lg border focus-ring" aria-pressed="false" aria-label="Toggle high contrast">High Contrast</button>
+        <div class="hidden sm:flex items-center gap-1" role="group" aria-label="Font size">
+          <button id="fontSm" class="px-2 py-2 rounded-lg border focus-ring" title="Smaller text">A−</button>
+          <button id="fontLg" class="px-2 py-2 rounded-lg border focus-ring" title="Larger text">A+</button>
+        </div>
+        <button class="md:hidden px-3 py-2 rounded-lg border focus-ring" id="menuToggle" aria-expanded="false" aria-controls="mobileNav">Menu</button>
+      </div>
+    </div>
+    <div id="mobileNav" class="md:hidden px-4 pb-3 hidden">
+      <div class="grid grid-cols-2 gap-2">
+        <button class="nav-btn px-3 py-2 rounded-lg bg-slate-100 focus-ring" data-target="home">Home</button>
+        <button class="nav-btn px-3 py-2 rounded-lg bg-slate-100 focus-ring" data-target="t1">Type 1 Guide</button>
+        <button class="nav-btn px-3 py-2 rounded-lg bg-slate-100 focus-ring" data-target="t2">Type 2 Guide</button>
+        <button class="nav-btn px-3 py-2 rounded-lg bg-slate-100 focus-ring" data-target="food">Food Finder</button>
+        <button class="nav-btn px-3 py-2 rounded-lg bg-slate-100 focus-ring" data-target="tools">Tools</button>
+        <button class="nav-btn px-3 py-2 rounded-lg bg-slate-100 focus-ring" data-target="access">Accessibility</button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="max-w-7xl mx-auto px-4 py-6 space-y-8">
+    <!-- Home -->
+    <section id="panel-home" class="panel">
+      <div class="grid md:grid-cols-2 gap-6">
+        <div class="p-5 rounded-2xl bg-[var(--card)] shadow">
+          <h1 class="text-2xl font-bold mb-2">Plan a safer, easier Disney trip with diabetes</h1>
+          <p class="text-[var(--muted)]">Evidence-informed guidance for Type 1 and Type 2 diabetes, park-by-park carb counts, and practical tools for dosing, packing, and hydration.</p>
+          <ul class="mt-4 list-disc pl-5 space-y-1 text-sm">
+            <li>Separate <strong>Type 1</strong> and <strong>Type 2</strong> guides</li>
+            <li><strong>Food Finder</strong> organized by Park → Land → Restaurant, powered by <code>data.json</code></li>
+            <li>Tools: carb estimator, insulin helper, dynamic packing checklist</li>
+            <li>First aid locations, medication refrigeration, and DAS tips</li>
+          </ul>
+        </div>
+        <div class="p-5 rounded-2xl bg-[var(--card)] shadow">
+          <h2 class="text-xl font-semibold mb-2">Quick start</h2>
+          <ol class="list-decimal pl-5 space-y-1 text-sm">
+            <li>Open <button class="nav-btn text-blue-600 underline" data-target="food">Food Finder</button> and choose your park.</li>
+            <li>Add items to the <em>Meal</em> to total carbs/calories.</li>
+            <li>Use <button class="nav-btn text-blue-600 underline" data-target="tools">Insulin Helper</button> to apply activity-based adjustments.</li>
+            <li>Finish the <button class="nav-btn text-blue-600 underline" data-target="tools">Packing Checklist</button> before you go.</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- Type 1 -->
+    <section id="panel-t1" class="panel hidden">
+      <div class="p-5 rounded-2xl bg-[var(--card)] shadow">
+        <h2 class="text-2xl font-bold mb-2">Type 1 Diabetes — Park Strategy</h2>
+        <p class="text-sm text-[var(--muted)] mb-4">Use CGM or frequent BGM; reduce prandial insulin ~25–50% before anticipated moderate–high activity; consider temporary basal −10–20% during prolonged activity. Carry fast carbs and glucagon. Keep insulin cool (use First Aid refrigeration).</p>
+        <ul class="list-disc pl-5 text-sm space-y-1">
+          <li>Match bolus to actual carbohydrate grams; if meals are delayed/smaller, adjust dose or eat a snack.</li>
+          <li>Use pump “Activity”/temp basal features during long walking/heat; monitor every 2–4 hours.</li>
+          <li>Hydrate frequently; schedule indoor breaks during peak heat. Avoid leaving insulin/devices in sun.</li>
+          <li>Carry a physician letter, medical ID, and twice the needed supplies.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Type 2 -->
+    <section id="panel-t2" class="panel hidden">
+      <div class="p-5 rounded-2xl bg-[var(--card)] shadow">
+        <h2 class="text-2xl font-bold mb-2">Type 2 Diabetes — Park Strategy</h2>
+        <p class="text-sm text-[var(--muted)] mb-4">Plan meds around activity. Metformin/GLP‑1/SGLT2 usually need no exercise dose change; sulfonylureas/meglitinides may need reduction on high-activity days. If on insulin, use T1 tactics. Emphasize hydration, foot care, and steady carbs.</p>
+        <ul class="list-disc pl-5 text-sm space-y-1">
+          <li>Use Food Finder to pick lower-carb/high-fiber options; share desserts; prefer water/diet drinks.</li>
+          <li>Check glucose more often on long park days; CGM alerts help detect trends early.</li>
+          <li>For neuropathy, wear cushioned closed shoes; inspect feet daily; use DAS if standing intolerant.</li>
+          <li>Bring twice meds/supplies, medical ID, and doctor’s letter; keep meds in carry-on.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Food Finder -->
+    <section id="panel-food" class="panel hidden">
+      <div class="flex flex-col lg:flex-row gap-6">
+        <div class="flex-1 p-5 rounded-2xl bg-[var(--card)] shadow">
+          <div class="flex flex-col md:flex-row md:items-end gap-3">
+            <div class="flex-1">
+              <label for="parkSel" class="block text-sm font-semibold mb-1">Park</label>
+              <select id="parkSel" class="w-full border rounded-lg p-2 focus-ring"></select>
+            </div>
+            <div class="flex-1">
+              <label for="landSel" class="block text-sm font-semibold mb-1">Land/Area</label>
+              <select id="landSel" class="w-full border rounded-lg p-2 focus-ring"></select>
+            </div>
+            <div class="flex-1">
+              <label for="restSel" class="block text-sm font-semibold mb-1">Restaurant</label>
+              <select id="restSel" class="w-full border rounded-lg p-2 focus-ring"></select>
+            </div>
+          </div>
+
+          <div class="mt-4 flex flex-wrap items-end gap-3">
+            <div>
+              <label class="text-sm font-semibold block mb-1" for="q">Search</label>
+              <input id="q" type="search" placeholder="Search items…" class="border rounded-lg p-2 focus-ring w-56" />
+            </div>
+            <div>
+              <label class="text-sm font-semibold block mb-1" for="carbMax">Max carbs (g)</label>
+              <input id="carbMax" type="number" min="0" placeholder="e.g., 30" class="border rounded-lg p-2 focus-ring w-28" />
+            </div>
+            <label class="inline-flex items-center gap-2">
+              <input id="onlyVeg" type="checkbox" class="focus-ring" />
+              <span class="text-sm">Vegetarian only</span>
+            </label>
+            <label class="inline-flex items-center gap-2">
+              <input id="hideFried" type="checkbox" class="focus-ring" />
+              <span class="text-sm">Hide fried</span>
+            </label>
+            <label class="inline-flex items-center gap-2">
+              <input id="typeDrink" type="checkbox" class="focus-ring" />
+              <span class="text-sm">Show drinks only</span>
+            </label>
+            <div>
+              <label class="text-sm font-semibold block mb-1" for="sortSel">Sort</label>
+              <select id="sortSel" class="border rounded-lg p-2 focus-ring">
+                <option value="carbsAsc">Carbs ↑</option>
+                <option value="carbsDesc">Carbs ↓</option>
+                <option value="calAsc">Calories ↑</option>
+                <option value="calDesc">Calories ↓</option>
+                <option value="fatAsc">Fat ↑</option>
+                <option value="fatDesc">Fat ↓</option>
+                <option value="nameAsc">Name A→Z</option>
+              </select>
+            </div>
+          </div>
+
+          <div id="itemsList" class="mt-5 grid sm:grid-cols-2 xl:grid-cols-3 gap-4" aria-live="polite"></div>
+        </div>
+
+        <aside class="w-full lg:w-80 p-5 rounded-2xl bg-[var(--card)] shadow h-max">
+          <h3 class="text-lg font-semibold">Meal</h3>
+          <p class="text-sm text-[var(--muted)]">Add items to total carbs/calories. Use Insulin Helper for dosing ideas.</p>
+          <ul id="mealList" class="mt-3 space-y-2"></ul>
+          <div class="mt-3 text-sm border-t pt-3">
+            <div id="mealTotals" class="font-semibold">Carbs: 0 g • Calories: 0 kcal • Fat: 0 g</div>
+            <div class="mt-2 flex gap-2">
+              <button id="clearMeal" class="px-3 py-2 rounded-lg border focus-ring">Clear</button>
+              <button id="useInCalc" class="px-3 py-2 rounded-lg border focus-ring">Use in Insulin Helper</button>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- Tools -->
+    <section id="panel-tools" class="panel hidden">
+      <div class="grid lg:grid-cols-2 gap-6">
+        <!-- Insulin Helper -->
+        <div class="p-5 rounded-2xl bg-[var(--card)] shadow">
+          <h3 class="text-xl font-semibold mb-2">Insulin Helper (educational)</h3>
+          <p class="text-sm text-[var(--muted)]">Not medical advice. Always follow your clinician’s guidance.</p>
+          <div class="mt-3 grid sm:grid-cols-2 gap-3">
+            <label class="text-sm">Current BG (mg/dL)
+              <input id="ih-bg" type="number" class="mt-1 w-full border rounded-lg p-2 focus-ring" />
+            </label>
+            <label class="text-sm">Target BG (mg/dL)
+              <input id="ih-target" type="number" class="mt-1 w-full border rounded-lg p-2 focus-ring" value="110"/>
+            </label>
+            <label class="text-sm">Carbs (g)
+              <input id="ih-carbs" type="number" class="mt-1 w-full border rounded-lg p-2 focus-ring" />
+            </label>
+            <label class="text-sm">Insulin-to-Carb (g/u)
+              <input id="ih-icr" type="number" class="mt-1 w-full border rounded-lg p-2 focus-ring" placeholder="e.g., 10"/>
+            </label>
+            <label class="text-sm">Correction Factor (mg/dL per unit)
+              <input id="ih-cf" type="number" class="mt-1 w-full border rounded-lg p-2 focus-ring" placeholder="e.g., 50"/>
+            </label>
+            <label class="text-sm">Activity next ~2 hrs
+              <select id="ih-activity" class="mt-1 w-full border rounded-lg p-2 focus-ring">
+                <option value="none">Low</option>
+                <option value="mod">Moderate (walking/standing)</option>
+                <option value="high">High (intense/water rides)</option>
+              </select>
+            </label>
+          </div>
+          <div class="mt-3 flex gap-2">
+            <button id="ih-calc" class="px-3 py-2 rounded-lg border focus-ring">Calculate</button>
+            <button id="ih-loadmeal" class="px-3 py-2 rounded-lg border focus-ring">Load carbs from Meal</button>
+          </div>
+          <div id="ih-result" class="mt-4 text-sm"></div>
+        </div>
+
+        <!-- Packing Checklist -->
+        <div class="p-5 rounded-2xl bg-[var(--card)] shadow">
+          <h3 class="text-xl font-semibold mb-2">Packing Checklist</h3>
+          <div class="grid sm:grid-cols-3 gap-3 text-sm">
+            <label class="inline-flex items-center gap-2"><input id="pc-t1" type="checkbox" class="focus-ring"/> Type 1</label>
+            <label class="inline-flex items-center gap-2"><input id="pc-t2" type="checkbox" class="focus-ring"/> Type 2</label>
+            <label class="inline-flex items-center gap-2"><input id="pc-pump" type="checkbox" class="focus-ring"/> Pump</label>
+            <label class="inline-flex items-center gap-2"><input id="pc-cgm" type="checkbox" class="focus-ring"/> CGM</label>
+            <label class="inline-flex items-center gap-2"><input id="pc-child" type="checkbox" class="focus-ring"/> Child with DM</label>
+          </div>
+          <div class="mt-3 flex gap-2">
+            <button id="pc-build" class="px-3 py-2 rounded-lg border focus-ring">Build List</button>
+            <button id="pc-print" class="px-3 py-2 rounded-lg border focus-ring">Print</button>
+          </div>
+          <ul id="pc-list" class="mt-3 text-sm space-y-2"></ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Accessibility & Support -->
+    <section id="panel-access" class="panel hidden">
+      <div class="p-5 rounded-2xl bg-[var(--card)] shadow space-y-4">
+        <h3 class="text-xl font-semibold">Park Support</h3>
+        <ul class="list-disc pl-5 text-sm space-y-1">
+          <li>First Aid stations in every park; complimentary <strong>medication refrigeration</strong>. Ask any Cast Member for directions.</li>
+          <li>Bring a <strong>physician’s letter</strong> & wear a <strong>medical ID</strong>. Carry <strong>twice the supplies</strong> you’ll need.</li>
+          <li><strong>Hydration & heat</strong>: plan indoor breaks mid-day, drink water frequently, and keep insulin/devices cool.</li>
+          <li><strong>DAS</strong> may help if prolonged standing is unsafe; inquire at Guest Relations.</li>
+        </ul>
+        <h4 class="font-semibold">Site Accessibility</h4>
+        <ul class="list-disc pl-5 text-sm space-y-1">
+          <li>High-contrast mode and adjustable font size</li>
+          <li>Keyboard-navigable controls & ARIA labels</li>
+          <li>Clear icon labels for vegetarian, fried, and drinks</li>
+        </ul>
+        <p class="text-xs text-[var(--muted)]">Educational content only; does not replace medical advice. © {year} WDW Diabetes Guide.</p>
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+  <script>
+    // Replace {year}
+    document.querySelectorAll('p').forEach(p=>{ p.innerHTML = p.innerHTML.replace('{year}', new Date().getFullYear())});
+  </script>
+</body>
+</html>
