@@ -1,5 +1,5 @@
 /* WDW Diabetes Guide Script
-   Loads data.json and drives: Food Finder, Meal cart, Insulin Helper, Packing Checklist, Accessibility toggles.
+   Loads data from Supabase and drives: Food Finder, Meal cart, Insulin Helper, Packing Checklist, Accessibility toggles.
 */
 const state = {
   data: null,
@@ -58,7 +58,6 @@ function bindNav() {
       const target = btn.dataset.target;
       if (!target) return;
       showPanel(target);
-      // close mobile nav
       const m = $('#mobileNav');
       if (m && !m.classList.contains('hidden')) { m.classList.add('hidden'); $('#menuToggle').setAttribute('aria-expanded','false'); }
     });
@@ -73,13 +72,45 @@ function bindNav() {
   }
 }
 
-// Data loading
+// Data loading from Supabase
 async function loadData() {
-  const res = await fetch('data.json', {cache:'no-store'});
-  if (!res.ok) throw new Error('Failed to load data.json');
-  const json = await res.json();
-  state.data = json;
-  state.parks = json.parks || [];
+  // Fetch parks
+  const { data: parks, error: parksErr } = await supabase
+    .from('parks')
+    .select('*')
+    .order('name');
+  if (parksErr) throw new Error('Failed to load parks: ' + parksErr.message);
+
+  // Fetch all menu items
+  const { data: menuItems, error: itemsErr } = await supabase
+    .from('menu_items')
+    .select('*');
+  if (itemsErr) throw new Error('Failed to load menu items: ' + itemsErr.message);
+
+  // Group menu items by park and map column names to match the UI expectations
+  const parkMap = {};
+  for (const park of parks) {
+    parkMap[park.id] = { ...park, menuItems: [] };
+  }
+  for (const item of menuItems) {
+    if (parkMap[item.park_id]) {
+      parkMap[item.park_id].menuItems.push({
+        land: item.land,
+        restaurant: item.restaurant,
+        name: item.name,
+        description: item.description,
+        calories: item.calories,
+        carbs: item.carbs,
+        fat: item.fat,
+        type: item.type,
+        vegetarian: item.vegetarian,
+        isFried: item.is_fried
+      });
+    }
+  }
+
+  state.parks = Object.values(parkMap);
+  state.data = { parks: state.parks };
 }
 
 // Food Finder population
@@ -109,7 +140,6 @@ function populateLands() {
   landSel.innerHTML = '';
   restSel.innerHTML = '';
   if (!park) return;
-  // compute lands from menuItems to be safe
   const lands = unique((park.menuItems||[]).map(i=>sanitize(i.land)).filter(Boolean));
   lands.unshift('All lands');
   lands.forEach(l => {
@@ -210,7 +240,6 @@ function renderItems() {
     }
     if (i.vegetarian) { const b=document.createElement('span'); b.className='badge badge-veg'; b.textContent='Vegetarian'; badges.appendChild(b); }
     if (i.isFried) { const b=document.createElement('span'); b.className='badge badge-fried'; b.textContent='Fried'; badges.appendChild(b); }
-    // Carb heaviness
     if (num(i.carbs,0) <= 15) { const b=document.createElement('span'); b.className='badge badge-lowcarb'; b.textContent='<=15g carbs'; badges.appendChild(b); }
 
     const meta = document.createElement('div');
@@ -279,8 +308,8 @@ function insulinHelperCalc() {
   const bg = num($('#ih-bg').value);
   const target = num($('#ih-target').value);
   const carbs = num($('#ih-carbs').value);
-  const icr = num($('#ih-icr').value); // grams per unit
-  const cf = num($('#ih-cf').value);   // mg/dL per unit
+  const icr = num($('#ih-icr').value);
+  const cf = num($('#ih-cf').value);
   const activity = $('#ih-activity').value;
 
   const result = $('#ih-result');
@@ -288,14 +317,13 @@ function insulinHelperCalc() {
     result.innerHTML = `<p class="text-red-600">Enter at least carbs and your insulin-to-carb ratio.</p>`;
     return;
   }
-  let bolusCarb = carbs / icr; // units
+  let bolusCarb = carbs / icr;
   let corr = 0;
   if (cf && bg > target) corr = Math.max(0, (bg - target) / cf);
-  if (cf && bg < target) corr = (bg - target) / cf; // negative correction (reduce)
+  if (cf && bg < target) corr = (bg - target) / cf;
 
   let baseDose = bolusCarb + corr;
 
-  // Activity adjustment: mod −25%, high −50%
   let adjPct = 0;
   if (activity==='mod') adjPct = 0.25;
   if (activity==='high') adjPct = 0.50;
@@ -311,7 +339,7 @@ function insulinHelperCalc() {
         <li>Activity adjustment: <strong>${activity==='none'?'0%':'−'+(adjPct*100)+'%'}</strong></li>
         <li class="mt-1">Suggested dose: <strong>${suggested.toFixed(2)} u</strong></li>
       </ul>
-      <p class="text-xs text-[var(--muted)] mt-2">Use your clinician’s instructions and device wizard. Typical exercise reductions are ~25% (moderate) to ~50% (high) of prandial insulin.</p>
+      <p class="text-xs text-[var(--muted)] mt-2">Use your clinician's instructions and device wizard. Typical exercise reductions are ~25% (moderate) to ~50% (high) of prandial insulin.</p>
     </div>`;
 }
 
@@ -323,7 +351,6 @@ function loadCarbsFromMeal() {
 // Packing Checklist
 function buildChecklist(opts) {
   const out = [];
-  // Always
   out.push('Medical ID (bracelet/necklace)');
   out.push('Physician letter listing diagnosis, meds, and supplies');
   out.push('Health insurance card & emergency contacts');
@@ -332,7 +359,6 @@ function buildChecklist(opts) {
   out.push('Rapid-acting carbs (glucose tabs/gel), snacks, water bottle');
   out.push('Cooling pouch/ice pack for insulin; avoid heat exposure');
   out.push('Portable charger / spare batteries for devices');
-  // Device-agnostic
   if (opts.t1 || opts.t2) out.push('BG meter + strips + lancets (even if you use CGM)');
   if (opts.cgm) {
     out.push('CGM sensors (extra), charger/transmitter, alcohol swabs');
@@ -353,7 +379,7 @@ function buildChecklist(opts) {
     out.push('If on insulin or sulfonylurea: extra hypoglycemia supplies');
   }
   if (opts.child) {
-    out.push('Child’s DMMP (Diabetes Medical Management Plan)');
+    out.push('Child\'s DMMP (Diabetes Medical Management Plan)');
     out.push('Consent/authorization for caregivers to administer care');
     out.push('Small comfort items for checks; spare clothes');
   }
@@ -400,7 +426,7 @@ async function init() {
   });
   $('#pc-print').addEventListener('click', ()=>window.print());
 
-  // Load data
+  // Load data from Supabase
   try {
     await loadData();
     populateParks();
@@ -420,7 +446,7 @@ async function init() {
     const foodPanel = document.getElementById('panel-food');
     const p = document.createElement('p');
     p.className = 'text-red-600';
-    p.textContent = 'Could not load data.json. Ensure the file is present next to index.html.';
+    p.textContent = 'Could not load data from Supabase. Check your configuration in supabase-config.js.';
     foodPanel.prepend(p);
   }
 
