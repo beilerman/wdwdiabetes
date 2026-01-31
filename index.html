@@ -63,7 +63,7 @@
           <p class="text-[var(--muted)]">Evidence-informed guidance for Type 1 and Type 2 diabetes, park-by-park carb counts, and practical tools for dosing, packing, and hydration.</p>
           <ul class="mt-4 list-disc pl-5 space-y-1 text-sm">
             <li>Separate <strong>Type 1</strong> and <strong>Type 2</strong> guides</li>
-            <li><strong>Food Finder</strong> organized by Park → Land → Restaurant, powered by <code>data.json</code></li>
+            <li><strong>Food Finder</strong> organized by Park → Land → Restaurant, powered by Supabase</li>
             <li>Tools: carb estimator, insulin helper, dynamic packing checklist</li>
             <li>First aid locations, medication refrigeration, and DAS tips</li>
           </ul>
@@ -258,6 +258,8 @@
     </section>
   </main>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="supabase-config.js"></script>
   <script src="script.js"></script>
   <script>
     // Replace {year}
